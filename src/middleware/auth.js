@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { errorResponse } = require("../utils/response");
 
 require("dotenv").config();
 
@@ -7,7 +8,7 @@ require("dotenv").config();
  * @description authenticate token and roles
  * @exports Authentication
  */
-export default class Authentication {
+module.exports =  class Authentication {
   /**
    * @param {object} req - The res body object
    * @param {object} res - The res body object
@@ -23,14 +24,14 @@ export default class Authentication {
         try {
           decoded = jwt.verify(token, process.env.JWT_KEY);
         } catch (error) {
-          return res.status(410).send({ status: 410, error: "Please sign in again." });
+          return errorResponse(res, 410, "Please sign in again.");
         }
         req.user = decoded;
         return next();
       }
-      return res.status(401).json({ status: 401, error: "Please login." });
+      return errorResponse(res, 410, "Please login.");
     } catch (error) {
-      return res.status(500).json({ status: 500, error: "Server Error." });
+      return errorResponse(res, 500, "Server Error.");
     }
   }
 }
