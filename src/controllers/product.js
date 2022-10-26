@@ -34,8 +34,12 @@ module.exports =  class productController {
      */
   static async getProducts(req, res) {
     try {
+      const { page, limit } = req.query;
+      const startIndex = (page - 1) * limit; 
+      const endIndex = page * limit; 
       const products = await db.query( `SELECT  id, ownerid, name, category FROM products ORDER BY created_at DESC`);
-      return successResponse(res, 200, "Successfully retrived all Fashion products.", products.rows);
+      const result = products.rows.slice(startIndex, endIndex);
+      return successResponse(res, 200, "Successfully retrived all Fashion products.", result);
     } catch (error) {
       handleError(error, req);
       return errorResponse(res, 500, "Server error.");
@@ -50,7 +54,6 @@ module.exports =  class productController {
   static async getProductById(req, res) {
     try {
       const { productId } = req.params;
-      console.log(productId)
       const product = await db.query("SELECT * FROM products WHERE id = $1", [
         productId,
       ]);
