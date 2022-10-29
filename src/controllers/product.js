@@ -16,7 +16,6 @@ module.exports =  class productController {
   static async createProduct(req, res) {
     try {
       const { id } = req.user;
-      console.log(req.user)
       const { name, category } = req.body;
       await db.query("INSERT INTO products (ownerid, name, category) VALUES ($1, $2, $3)",
       [id, name, category]);
@@ -57,7 +56,7 @@ module.exports =  class productController {
       const product = await db.query("SELECT * FROM products WHERE id = $1", [
         productId,
       ]);
-      if (!product) return errorResponse(res, 404, "Product not found");
+      if (product.rows.length === 0) return errorResponse(res, 404, "Product not found");
       return successResponse(res, 200, "Successfully retrived Product.", product.rows);
     } catch (error) {
       handleError(error, req);

@@ -35,6 +35,7 @@ module.exports =  class UserController {
       return errorResponse(res, 500, "Server error.");
     }
   }
+  
 
   /**
    * @param {object} req - The user request object
